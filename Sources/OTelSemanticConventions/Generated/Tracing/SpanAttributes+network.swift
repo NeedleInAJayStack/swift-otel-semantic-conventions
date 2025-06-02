@@ -90,7 +90,7 @@ extension SpanAttributes {
             ///     - `ipv6`
             ///
             /// The value SHOULD be normalized to lowercase.
-            public var `type`: SpanAttributeKey<TypeEnum> { .init(name: OTelAttribute.network.`type`) }
+            public var `type`: SpanAttributeKey<TypeEnum> { .init(name: OTelAttribute.network.type) }
 
             public struct TypeEnum: SpanAttributeConvertible, RawRepresentable, Sendable {
                 public let rawValue: String
@@ -216,7 +216,7 @@ extension SpanAttributes {
                 ///     - `mqtt`
                 ///
                 /// The value SHOULD be normalized to lowercase.
-                public var name: SpanAttributeKey<String> { .init(name: OTelAttribute.network.`protocol`.name) }
+                public var name: SpanAttributeKey<String> { .init(name: OTelAttribute.network.protocol.name) }
 
                 /// `network.protocol.version`: The actual version of the protocol used for network communication.
                 ///
@@ -227,7 +227,7 @@ extension SpanAttributes {
                 ///     - `2`
                 ///
                 /// If protocol version is subject to negotiation (for example using [ALPN](https://www.rfc-editor.org/rfc/rfc7301.html)), this attribute SHOULD be set to the negotiated version. If the actual protocol version is not known, this attribute SHOULD NOT be set.
-                public var version: SpanAttributeKey<String> { .init(name: OTelAttribute.network.`protocol`.version) }
+                public var version: SpanAttributeKey<String> { .init(name: OTelAttribute.network.protocol.version) }
             }
         }
     }

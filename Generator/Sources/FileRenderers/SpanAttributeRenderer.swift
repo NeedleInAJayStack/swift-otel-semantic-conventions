@@ -40,6 +40,7 @@ struct SpanAttributeRenderer: FileRenderer {
         guard components.count > 1 else {
             path.append(nameGenerator.swiftMemberName(for: components[0]))
             return path.joined(separator: ".")
+                .replacingOccurrences(of: "`", with: "")
         }
 
         // Walk the namespace tree, appending each name. Record the namespace so we can resolve the attribute name at the end.
@@ -53,6 +54,7 @@ struct SpanAttributeRenderer: FileRenderer {
         }
         try path.append(attributeMemberName(attributeID, namespace))
         return path.joined(separator: ".")
+            .replacingOccurrences(of: "`", with: "")
     }
 
     private func renderNamespace(

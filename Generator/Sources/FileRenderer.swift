@@ -46,9 +46,27 @@ final class Context {
 
 extension FileRenderer {
     func renderDocs(_ attribute: Attribute) -> String {
+        /// Replaces any piece of text
+        func replaceWithDoccReferences(_ doc: String) -> String {
+            /// Match anything in backticks that consists of all lowercase characters, periods, and underscores.
+            let symbolRegex = /`([a-z\._]+)`/
+            var result = doc
+            if doc.contains(symbolRegex) {
+                result.replace(symbolRegex) { match in
+                    if let swiftMemberPath = try? attributeIDToSwiftMemberPath(String(match.1)) {
+                        return "``\(swiftMemberPath.replacing(".", with: "/"))``"
+                    } else {
+                        return String(match.1)
+                    }
+                }
+            }
+            return result
+        }
+
         var result = "`\(attribute.id)`"
+
         if let brief = attribute.brief?.trimmingCharacters(in: .whitespacesAndNewlines), !brief.isEmpty {
-            result.append(": \(brief)")
+            result.append(": \(replaceWithDoccReferences(brief))")
         }
 
         result.append("\n\n- Stability: \(attribute.stability)")
@@ -57,7 +75,7 @@ extension FileRenderer {
             for member in attributeType.members {
                 result.append("\n    - `\(member.value)`")
                 if let brief = member.brief?.trimmingCharacters(in: .whitespacesAndNewlines), !brief.isEmpty {
-                    result.append(": \(brief)")
+                    result.append(": \(replaceWithDoccReferences(brief))")
                 }
             }
         } else {
@@ -65,17 +83,17 @@ extension FileRenderer {
         }
         if let examples = attribute.examples {
             if examples.count == 1 {
-                result.append("\n- Example: `\(examples[0])`")
+                result.append("\n- Example: `\(replaceWithDoccReferences(examples[0]))`")
             } else {
                 result.append("\n- Examples:")
                 for example in examples {
-                    result.append("\n    - `\(example)`")
+                    result.append("\n    - `\(replaceWithDoccReferences(example))`")
                 }
             }
         }
 
         if let note = attribute.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
-            result.append("\n\n\(note)")
+            result.append("\n\n\(replaceWithDoccReferences(note))")
         }
 
         return result.prefixLines(with: "/// ")

@@ -35,6 +35,10 @@ extension OTelAttribute {
         /// - Examples:
         ///     - `Division by zero`
         ///     - `Can't convert 'int' object to str implicitly`
+        ///
+        /// > [!WARNING]
+        /// >
+        /// > This attribute may contain sensitive information.
         public static let message = "exception.message"
 
         /// `exception.stacktrace`: A stacktrace as a string in the natural representation for the language runtime. The representation is to be determined and documented by each language SIG.

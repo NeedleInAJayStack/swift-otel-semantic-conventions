@@ -53,6 +53,12 @@ extension SpanAttributes {
             /// It is also NOT RECOMMENDED to duplicate the value of `exception.message` in `error.message`.
             ///
             /// `error.message` is NOT RECOMMENDED for metrics or spans due to its unbounded cardinality and overlap with span status.
+            @available(
+                *,
+                deprecated,
+                message:
+                    "Obsoleted: Use domain-specific error message attribute. For example, use `feature_flag.error.message` for feature flag errors."
+            )
             public var message: SpanAttributeKey<String> { .init(name: OTelAttribute.error.message) }
             #endif
 

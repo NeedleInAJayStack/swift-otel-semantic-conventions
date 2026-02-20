@@ -131,6 +131,15 @@ extension OTelAttribute {
             ///     - `Math Tutor`
             ///     - `Fiction Writer`
             public static let name = "gen_ai.agent.name"
+
+            /// `gen_ai.agent.version` **UNSTABLE**: The version of the GenAI agent.
+            ///
+            /// - Stability: development
+            /// - Type: string
+            /// - Examples:
+            ///     - `1.0.0`
+            ///     - `2025-05-01`
+            public static let version = "gen_ai.agent.version"
         }
 
         /// `gen_ai.conversation` namespace
@@ -337,6 +346,7 @@ extension OTelAttribute {
             ///     - `generate_content`: Multimodal content generation operation such as [Gemini Generate Content](https://ai.google.dev/api/generate-content)
             ///     - `text_completion`: Text completions operation such as [OpenAI Completions API (Legacy)](https://platform.openai.com/docs/api-reference/completions)
             ///     - `embeddings`: Embeddings operation such as [OpenAI Create embeddings API](https://platform.openai.com/docs/api-reference/embeddings/create)
+            ///     - `retrieval`: Retrieval operation such as [OpenAI Search Vector Store API](https://platform.openai.com/docs/api-reference/vector-stores/search)
             ///     - `create_agent`: Create GenAI agent
             ///     - `invoke_agent`: Invoke GenAI agent
             ///     - `execute_tool`: Execute a tool
@@ -560,6 +570,53 @@ extension OTelAttribute {
             public static let model = "gen_ai.response.model"
         }
 
+        /// `gen_ai.retrieval` namespace
+        public enum retrieval {
+            /// `gen_ai.retrieval.documents` **UNSTABLE**: The documents retrieved.
+            ///
+            /// - Stability: development
+            /// - Type: any
+            /// - Example: `[
+            ///   {
+            ///     "id": "doc_123",
+            ///     "score": 0.95
+            ///   },
+            ///   {
+            ///     "id": "doc_456",
+            ///     "score": 0.87
+            ///   },
+            ///   {
+            ///     "id": "doc_789",
+            ///     "score": 0.82
+            ///   }
+            /// ]
+            /// `
+            ///
+            /// Instrumentations MUST follow [Retrieval documents JSON schema](/docs/gen-ai/gen-ai-retrieval-documents.json).
+            /// When the attribute is recorded on events, it MUST be recorded in structured
+            /// form. When recorded on spans, it MAY be recorded as a JSON string if structured
+            /// format is not supported and SHOULD be recorded in structured form otherwise.
+            ///
+            /// Each document object SHOULD contain at least the following properties:
+            /// `id` (string): A unique identifier for the document, `score` (double): The relevance score of the document
+            public static let documents = "gen_ai.retrieval.documents"
+
+            /// `gen_ai.retrieval.query` namespace
+            public enum query {
+                /// `gen_ai.retrieval.query.text` **UNSTABLE**: The query text used for retrieval.
+                ///
+                /// - Stability: development
+                /// - Type: string
+                /// - Examples:
+                ///     - `What is the capital of France?`
+                ///     - `weather in Paris`
+                ///
+                /// > [!Warning]
+                /// > This attribute may contain sensitive information.
+                public static let text = "gen_ai.retrieval.query.text"
+            }
+        }
+
         /// `gen_ai.token` namespace
         public enum token {
             /// `gen_ai.token.type` **UNSTABLE**: The type of token being counted.
@@ -716,6 +773,11 @@ extension OTelAttribute {
             /// - Stability: development
             /// - Type: int
             /// - Example: `100`
+            ///
+            /// This value SHOULD include all types of input tokens, including cached tokens.
+            /// Instrumentations SHOULD make a best effort to populate this value, using a total
+            /// provided by the provider when available or, depending on the provider API,
+            /// by summing different token types parsed from the provider output.
             public static let inputTokens = "gen_ai.usage.input_tokens"
 
             /// `gen_ai.usage.output_tokens` **UNSTABLE**: The number of tokens used in the GenAI response (completion).
@@ -732,6 +794,30 @@ extension OTelAttribute {
             /// - Example: `42`
             @available(*, deprecated, renamed: "OTelAttribute.genAi.usage.inputTokens")
             public static let promptTokens = "gen_ai.usage.prompt_tokens"
+
+            /// `gen_ai.usage.cache_creation` namespace
+            public enum cacheCreation {
+                /// `gen_ai.usage.cache_creation.input_tokens` **UNSTABLE**: The number of input tokens written to a provider-managed cache.
+                ///
+                /// - Stability: development
+                /// - Type: int
+                /// - Example: `25`
+                ///
+                /// The value SHOULD be included in `gen_ai.usage.input_tokens`.
+                public static let inputTokens = "gen_ai.usage.cache_creation.input_tokens"
+            }
+
+            /// `gen_ai.usage.cache_read` namespace
+            public enum cacheRead {
+                /// `gen_ai.usage.cache_read.input_tokens` **UNSTABLE**: The number of input tokens served from a provider-managed cache.
+                ///
+                /// - Stability: development
+                /// - Type: int
+                /// - Example: `50`
+                ///
+                /// The value SHOULD be included in `gen_ai.usage.input_tokens`.
+                public static let inputTokens = "gen_ai.usage.cache_read.input_tokens"
+            }
         }
     }
     #endif

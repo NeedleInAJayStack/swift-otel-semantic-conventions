@@ -350,6 +350,7 @@ extension OTelAttribute {
             ///     - `create_agent`: Create GenAI agent
             ///     - `invoke_agent`: Invoke GenAI agent
             ///     - `execute_tool`: Execute a tool
+            ///     - `invoke_workflow`: Invoke GenAI workflow
             ///
             /// If one of the predefined values applies, but specific system uses a different name it's RECOMMENDED to document it in the semantic conventions for specific GenAI system and use system-specific name in the instrumentation. If a different name is not documented, instrumentation libraries SHOULD use applicable predefined value.
             public static let name = "gen_ai.operation.name"
@@ -434,7 +435,7 @@ extension OTelAttribute {
             ///     - `anthropic`: [Anthropic](https://www.anthropic.com/)
             ///     - `cohere`: [Cohere](https://cohere.com/)
             ///     - `azure.ai.inference`: Azure AI Inference
-            ///     - `azure.ai.openai`: [Azure OpenAI](https://azure.microsoft.com/products/ai-services/openai-service/)
+            ///     - `azure.ai.openai`: [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview)
             ///     - `ibm.watsonx.ai`: [IBM Watsonx AI](https://www.ibm.com/products/watsonx-ai)
             ///     - `aws.bedrock`: [AWS Bedrock](https://aws.amazon.com/bedrock)
             ///     - `perplexity`: [Perplexity](https://www.perplexity.ai/)
@@ -515,6 +516,12 @@ extension OTelAttribute {
             /// - Type: stringArray
             public static let stopSequences = "gen_ai.request.stop_sequences"
 
+            /// `gen_ai.request.stream` **UNSTABLE**: Indicates whether the GenAI request was made in streaming mode.
+            ///
+            /// - Stability: development
+            /// - Type: boolean
+            public static let stream = "gen_ai.request.stream"
+
             /// `gen_ai.request.temperature` **UNSTABLE**: The temperature setting for the GenAI request.
             ///
             /// - Stability: development
@@ -568,6 +575,15 @@ extension OTelAttribute {
             /// - Type: string
             /// - Example: `gpt-4-0613`
             public static let model = "gen_ai.response.model"
+
+            /// `gen_ai.response.time_to_first_chunk` **UNSTABLE**: Time to first chunk in a streaming response, measured from request issuance, in seconds. The value is measured from when the client issues the generation request to when the first chunk is received in the response stream.
+            ///
+            /// - Stability: development
+            /// - Type: double
+            /// - Examples:
+            ///     - `0.5`
+            ///     - `1.2`
+            public static let timeToFirstChunk = "gen_ai.response.time_to_first_chunk"
         }
 
         /// `gen_ai.retrieval` namespace
@@ -634,7 +650,7 @@ extension OTelAttribute {
 
         /// `gen_ai.tool` namespace
         public enum tool {
-            /// `gen_ai.tool.definitions` **UNSTABLE**: The list of source system tool definitions available to the GenAI agent or model.
+            /// `gen_ai.tool.definitions` **UNSTABLE**: The list of tool definitions available to the GenAI agent or model.
             ///
             /// - Stability: development
             /// - Type: any
@@ -667,15 +683,15 @@ extension OTelAttribute {
             /// ]
             /// `
             ///
-            /// The value of this attribute matches source system tool definition format.
+            /// Instrumentations MUST follow [Tool Definitions JSON Schema](/docs/gen-ai/gen-ai-tool-definitions.json).
             ///
-            /// It's expected to be an array of objects where each object represents a tool definition. In case a serialized string is available
-            /// to the instrumentation, the instrumentation SHOULD do the best effort to
-            /// deserialize it to an array. When recorded on spans, it MAY be recorded as a JSON string if structured format is not supported and SHOULD be recorded in structured form otherwise.
+            /// When the attribute is recorded on events, it MUST be recorded in structured
+            /// form. When recorded on spans, it MAY be recorded as a JSON string if structured
+            /// format is not supported and SHOULD be recorded in structured form otherwise.
             ///
             /// Since this attribute could be large, it's NOT RECOMMENDED to populate
-            /// it by default. Instrumentations MAY provide a way to enable
-            /// populating this attribute.
+            /// non-required properties by default. Instrumentations MAY provide a way
+            /// to enable populating optional properties.
             public static let definitions = "gen_ai.tool.definitions"
 
             /// `gen_ai.tool.description` **UNSTABLE**: The tool description.
@@ -818,6 +834,32 @@ extension OTelAttribute {
                 /// The value SHOULD be included in `gen_ai.usage.input_tokens`.
                 public static let inputTokens = "gen_ai.usage.cache_read.input_tokens"
             }
+
+            /// `gen_ai.usage.reasoning` namespace
+            public enum reasoning {
+                /// `gen_ai.usage.reasoning.output_tokens` **UNSTABLE**: The number of output tokens used for reasoning (e.g. chain-of-thought, extended thinking).
+                ///
+                /// - Stability: development
+                /// - Type: int
+                /// - Example: `50`
+                ///
+                /// The value SHOULD be included in `gen_ai.usage.output_tokens`.
+                public static let outputTokens = "gen_ai.usage.reasoning.output_tokens"
+            }
+        }
+
+        /// `gen_ai.workflow` namespace
+        public enum workflow {
+            /// `gen_ai.workflow.name` **UNSTABLE**: Human-readable name of the GenAI workflow provided by the application.
+            ///
+            /// - Stability: development
+            /// - Type: string
+            /// - Examples:
+            ///     - `multi_agent_rag`
+            ///     - `customer_support_pipeline`
+            ///
+            /// This attribute can be populated in different frameworks eg: name of the first chain in LangChain OR name of the crew in CrewAI.
+            public static let name = "gen_ai.workflow.name"
         }
     }
     #endif

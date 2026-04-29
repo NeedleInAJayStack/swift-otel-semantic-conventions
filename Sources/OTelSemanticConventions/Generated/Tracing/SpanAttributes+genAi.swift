@@ -661,6 +661,7 @@ extension SpanAttributes {
                 ///     - `create_agent`: Create GenAI agent
                 ///     - `invoke_agent`: Invoke GenAI agent
                 ///     - `execute_tool`: Execute a tool
+                ///     - `invoke_workflow`: Invoke GenAI workflow
                 ///
                 /// If one of the predefined values applies, but specific system uses a different name it's RECOMMENDED to document it in the semantic conventions for specific GenAI system and use system-specific name in the instrumentation. If a different name is not documented, instrumentation libraries SHOULD use applicable predefined value.
                 public var name: SpanAttributeKey<NameEnum> { .init(name: OTelAttribute.genAi.operation.name) }
@@ -827,7 +828,7 @@ extension SpanAttributes {
                 ///     - `anthropic`: [Anthropic](https://www.anthropic.com/)
                 ///     - `cohere`: [Cohere](https://cohere.com/)
                 ///     - `azure.ai.inference`: Azure AI Inference
-                ///     - `azure.ai.openai`: [Azure OpenAI](https://azure.microsoft.com/products/ai-services/openai-service/)
+                ///     - `azure.ai.openai`: [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview)
                 ///     - `ibm.watsonx.ai`: [IBM Watsonx AI](https://www.ibm.com/products/watsonx-ai)
                 ///     - `aws.bedrock`: [AWS Bedrock](https://aws.amazon.com/bedrock)
                 ///     - `perplexity`: [Perplexity](https://www.perplexity.ai/)
@@ -946,6 +947,12 @@ extension SpanAttributes {
                     .init(name: OTelAttribute.genAi.request.stopSequences)
                 }
 
+                /// `gen_ai.request.stream` **UNSTABLE**: Indicates whether the GenAI request was made in streaming mode.
+                ///
+                /// - Stability: development
+                /// - Type: boolean
+                public var stream: SpanAttributeKey<Bool> { .init(name: OTelAttribute.genAi.request.stream) }
+
                 /// `gen_ai.request.temperature` **UNSTABLE**: The temperature setting for the GenAI request.
                 ///
                 /// - Stability: development
@@ -1043,6 +1050,17 @@ extension SpanAttributes {
                 /// - Type: string
                 /// - Example: `gpt-4-0613`
                 public var model: SpanAttributeKey<String> { .init(name: OTelAttribute.genAi.response.model) }
+
+                /// `gen_ai.response.time_to_first_chunk` **UNSTABLE**: Time to first chunk in a streaming response, measured from request issuance, in seconds. The value is measured from when the client issues the generation request to when the first chunk is received in the response stream.
+                ///
+                /// - Stability: development
+                /// - Type: double
+                /// - Examples:
+                ///     - `0.5`
+                ///     - `1.2`
+                public var timeToFirstChunk: SpanAttributeKey<Double> {
+                    .init(name: OTelAttribute.genAi.response.timeToFirstChunk)
+                }
             }
         }
 
@@ -1201,7 +1219,7 @@ extension SpanAttributes {
             public struct NestedSpanAttributes: NestedSpanAttributesProtocol {
                 public init() {}
 
-                /// `gen_ai.tool.definitions` **UNSTABLE**: The list of source system tool definitions available to the GenAI agent or model.
+                /// `gen_ai.tool.definitions` **UNSTABLE**: The list of tool definitions available to the GenAI agent or model.
                 ///
                 /// - Stability: development
                 /// - Type: any
@@ -1234,15 +1252,15 @@ extension SpanAttributes {
                 /// ]
                 /// `
                 ///
-                /// The value of this attribute matches source system tool definition format.
+                /// Instrumentations MUST follow [Tool Definitions JSON Schema](/docs/gen-ai/gen-ai-tool-definitions.json).
                 ///
-                /// It's expected to be an array of objects where each object represents a tool definition. In case a serialized string is available
-                /// to the instrumentation, the instrumentation SHOULD do the best effort to
-                /// deserialize it to an array. When recorded on spans, it MAY be recorded as a JSON string if structured format is not supported and SHOULD be recorded in structured form otherwise.
+                /// When the attribute is recorded on events, it MUST be recorded in structured
+                /// form. When recorded on spans, it MAY be recorded as a JSON string if structured
+                /// format is not supported and SHOULD be recorded in structured form otherwise.
                 ///
                 /// Since this attribute could be large, it's NOT RECOMMENDED to populate
-                /// it by default. Instrumentations MAY provide a way to enable
-                /// populating this attribute.
+                /// non-required properties by default. Instrumentations MAY provide a way
+                /// to enable populating optional properties.
                 public var definitions: SpanAttributeKey<SpanAttribute> {
                     .init(name: OTelAttribute.genAi.tool.definitions)
                 }
@@ -1477,6 +1495,74 @@ extension SpanAttributes {
                         .init(name: OTelAttribute.genAi.usage.cacheRead.inputTokens)
                     }
                 }
+            }
+
+            /// `gen_ai.usage.reasoning` namespace
+            public var reasoning: ReasoningAttributes {
+                get {
+                    .init(attributes: self.attributes)
+                }
+                set {
+                    self.attributes = newValue.attributes
+                }
+            }
+
+            @dynamicMemberLookup
+            public struct ReasoningAttributes: SpanAttributeNamespace {
+                public var attributes: Tracing.SpanAttributes
+
+                public init(attributes: Tracing.SpanAttributes) {
+                    self.attributes = attributes
+                }
+
+                public struct NestedSpanAttributes: NestedSpanAttributesProtocol {
+                    public init() {}
+
+                    /// `gen_ai.usage.reasoning.output_tokens` **UNSTABLE**: The number of output tokens used for reasoning (e.g. chain-of-thought, extended thinking).
+                    ///
+                    /// - Stability: development
+                    /// - Type: int
+                    /// - Example: `50`
+                    ///
+                    /// The value SHOULD be included in `gen_ai.usage.output_tokens`.
+                    public var outputTokens: SpanAttributeKey<Int> {
+                        .init(name: OTelAttribute.genAi.usage.reasoning.outputTokens)
+                    }
+                }
+            }
+        }
+
+        /// `gen_ai.workflow` namespace
+        public var workflow: WorkflowAttributes {
+            get {
+                .init(attributes: self.attributes)
+            }
+            set {
+                self.attributes = newValue.attributes
+            }
+        }
+
+        @dynamicMemberLookup
+        public struct WorkflowAttributes: SpanAttributeNamespace {
+            public var attributes: Tracing.SpanAttributes
+
+            public init(attributes: Tracing.SpanAttributes) {
+                self.attributes = attributes
+            }
+
+            public struct NestedSpanAttributes: NestedSpanAttributesProtocol {
+                public init() {}
+
+                /// `gen_ai.workflow.name` **UNSTABLE**: Human-readable name of the GenAI workflow provided by the application.
+                ///
+                /// - Stability: development
+                /// - Type: string
+                /// - Examples:
+                ///     - `multi_agent_rag`
+                ///     - `customer_support_pipeline`
+                ///
+                /// This attribute can be populated in different frameworks eg: name of the first chain in LangChain OR name of the crew in CrewAI.
+                public var name: SpanAttributeKey<String> { .init(name: OTelAttribute.genAi.workflow.name) }
             }
         }
     }

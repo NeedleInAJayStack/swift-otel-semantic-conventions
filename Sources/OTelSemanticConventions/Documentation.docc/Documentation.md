@@ -1550,12 +1550,14 @@ This document defines the attributes used to describe telemetry in the context o
             - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/presencePenalty``
             - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/seed``
             - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/stopSequences``
+            - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/stream``
             - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/temperature``
             - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/topK``
             - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/topP``
             - ``Tracing/SpanAttributes/GenAiAttributes/ResponseAttributes/NestedSpanAttributes/finishReasons``
             - ``Tracing/SpanAttributes/GenAiAttributes/ResponseAttributes/NestedSpanAttributes/id``
             - ``Tracing/SpanAttributes/GenAiAttributes/ResponseAttributes/NestedSpanAttributes/model``
+            - ``Tracing/SpanAttributes/GenAiAttributes/ResponseAttributes/NestedSpanAttributes/timeToFirstChunk``
             - ``Tracing/SpanAttributes/GenAiAttributes/RetrievalAttributes/NestedSpanAttributes/documents``
             - ``Tracing/SpanAttributes/GenAiAttributes/RetrievalAttributes/QueryAttributes/NestedSpanAttributes/text``
             - ``Tracing/SpanAttributes/GenAiAttributes/NestedSpanAttributes/systemInstructions``
@@ -1571,6 +1573,8 @@ This document defines the attributes used to describe telemetry in the context o
             - ``Tracing/SpanAttributes/GenAiAttributes/UsageAttributes/CacheReadAttributes/NestedSpanAttributes/inputTokens``
             - ``Tracing/SpanAttributes/GenAiAttributes/UsageAttributes/NestedSpanAttributes/inputTokens``
             - ``Tracing/SpanAttributes/GenAiAttributes/UsageAttributes/NestedSpanAttributes/outputTokens``
+            - ``Tracing/SpanAttributes/GenAiAttributes/UsageAttributes/ReasoningAttributes/NestedSpanAttributes/outputTokens``
+            - ``Tracing/SpanAttributes/GenAiAttributes/WorkflowAttributes/NestedSpanAttributes/name``
         }
     }
     @Tab("String Constants") {
@@ -1600,12 +1604,14 @@ This document defines the attributes used to describe telemetry in the context o
             - ``OTelAttribute/genAi/request/presencePenalty``
             - ``OTelAttribute/genAi/request/seed``
             - ``OTelAttribute/genAi/request/stopSequences``
+            - ``OTelAttribute/genAi/request/stream``
             - ``OTelAttribute/genAi/request/temperature``
             - ``OTelAttribute/genAi/request/topK``
             - ``OTelAttribute/genAi/request/topP``
             - ``OTelAttribute/genAi/response/finishReasons``
             - ``OTelAttribute/genAi/response/id``
             - ``OTelAttribute/genAi/response/model``
+            - ``OTelAttribute/genAi/response/timeToFirstChunk``
             - ``OTelAttribute/genAi/retrieval/documents``
             - ``OTelAttribute/genAi/retrieval/query/text``
             - ``OTelAttribute/genAi/systemInstructions``
@@ -1621,6 +1627,8 @@ This document defines the attributes used to describe telemetry in the context o
             - ``OTelAttribute/genAi/usage/cacheRead/inputTokens``
             - ``OTelAttribute/genAi/usage/inputTokens``
             - ``OTelAttribute/genAi/usage/outputTokens``
+            - ``OTelAttribute/genAi/usage/reasoning/outputTokens``
+            - ``OTelAttribute/genAi/workflow/name``
         }
     }
 }
@@ -1710,11 +1718,17 @@ This document defines Go related attributes.
 @TabNavigator {
     @Tab("Span Attributes") {
         @Links(visualStyle: list) {
+            - ``Tracing/SpanAttributes/GoAttributes/CpuAttributes/NestedSpanAttributes/detailedState``
+            - ``Tracing/SpanAttributes/GoAttributes/CpuAttributes/NestedSpanAttributes/state``
+            - ``Tracing/SpanAttributes/GoAttributes/MemoryAttributes/NestedSpanAttributes/detailedType``
             - ``Tracing/SpanAttributes/GoAttributes/MemoryAttributes/NestedSpanAttributes/type``
         }
     }
     @Tab("String Constants") {
         @Links(visualStyle: list) {
+            - ``OTelAttribute/go/cpu/detailedState``
+            - ``OTelAttribute/go/cpu/state``
+            - ``OTelAttribute/go/memory/detailedType``
             - ``OTelAttribute/go/memory/type``
         }
     }
@@ -2053,7 +2067,19 @@ Kubernetes resource attributes.
             - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/ConditionAttributes/NestedSpanAttributes/type``
             - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/label``
             - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/NestedSpanAttributes/name``
+            - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/SystemContainerAttributes/NestedSpanAttributes/name``
             - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/NestedSpanAttributes/uid``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/annotation``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/label``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/NestedSpanAttributes/name``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/NestedSpanAttributes/reclaimPolicy``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/StatusAttributes/NestedSpanAttributes/phase``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/NestedSpanAttributes/uid``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/annotation``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/label``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/NestedSpanAttributes/name``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/StatusAttributes/NestedSpanAttributes/phase``
+            - ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/NestedSpanAttributes/uid``
             - ``Tracing/SpanAttributes/K8sAttributes/PodAttributes/annotation``
             - ``Tracing/SpanAttributes/K8sAttributes/PodAttributes/NestedSpanAttributes/hostname``
             - ``Tracing/SpanAttributes/K8sAttributes/PodAttributes/NestedSpanAttributes/ip``
@@ -2133,7 +2159,19 @@ Kubernetes resource attributes.
             - ``OTelAttribute/k8s/node/condition/type``
             - ``OTelAttribute/k8s/node/label``
             - ``OTelAttribute/k8s/node/name``
+            - ``OTelAttribute/k8s/node/systemContainer/name``
             - ``OTelAttribute/k8s/node/uid``
+            - ``OTelAttribute/k8s/persistentvolume/annotation``
+            - ``OTelAttribute/k8s/persistentvolume/label``
+            - ``OTelAttribute/k8s/persistentvolume/name``
+            - ``OTelAttribute/k8s/persistentvolume/reclaimPolicy``
+            - ``OTelAttribute/k8s/persistentvolume/status/phase``
+            - ``OTelAttribute/k8s/persistentvolume/uid``
+            - ``OTelAttribute/k8s/persistentvolumeclaim/annotation``
+            - ``OTelAttribute/k8s/persistentvolumeclaim/label``
+            - ``OTelAttribute/k8s/persistentvolumeclaim/name``
+            - ``OTelAttribute/k8s/persistentvolumeclaim/status/phase``
+            - ``OTelAttribute/k8s/persistentvolumeclaim/uid``
             - ``OTelAttribute/k8s/pod/annotation``
             - ``OTelAttribute/k8s/pod/hostname``
             - ``OTelAttribute/k8s/pod/ip``
@@ -3328,12 +3366,14 @@ Describes System Memory attributes
 @TabNavigator {
     @Tab("Span Attributes") {
         @Links(visualStyle: list) {
+            - ``Tracing/SpanAttributes/SystemAttributes/MemoryAttributes/LinuxAttributes/HugepagesAttributes/NestedSpanAttributes/state``
             - ``Tracing/SpanAttributes/SystemAttributes/MemoryAttributes/LinuxAttributes/SlabAttributes/NestedSpanAttributes/state``
             - ``Tracing/SpanAttributes/SystemAttributes/MemoryAttributes/NestedSpanAttributes/state``
         }
     }
     @Tab("String Constants") {
         @Links(visualStyle: list) {
+            - ``OTelAttribute/system/memory/linux/hugepages/state``
             - ``OTelAttribute/system/memory/linux/slab/state``
             - ``OTelAttribute/system/memory/state``
         }
@@ -4564,12 +4604,14 @@ This document defines attributes of a z/OS resource.
 - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/presencePenalty``
 - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/seed``
 - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/stopSequences``
+- ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/stream``
 - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/temperature``
 - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/topK``
 - ``Tracing/SpanAttributes/GenAiAttributes/RequestAttributes/NestedSpanAttributes/topP``
 - ``Tracing/SpanAttributes/GenAiAttributes/ResponseAttributes/NestedSpanAttributes/finishReasons``
 - ``Tracing/SpanAttributes/GenAiAttributes/ResponseAttributes/NestedSpanAttributes/id``
 - ``Tracing/SpanAttributes/GenAiAttributes/ResponseAttributes/NestedSpanAttributes/model``
+- ``Tracing/SpanAttributes/GenAiAttributes/ResponseAttributes/NestedSpanAttributes/timeToFirstChunk``
 - ``Tracing/SpanAttributes/GenAiAttributes/RetrievalAttributes/NestedSpanAttributes/documents``
 - ``Tracing/SpanAttributes/GenAiAttributes/RetrievalAttributes/QueryAttributes/NestedSpanAttributes/text``
 - ``Tracing/SpanAttributes/GenAiAttributes/NestedSpanAttributes/systemInstructions``
@@ -4585,6 +4627,8 @@ This document defines attributes of a z/OS resource.
 - ``Tracing/SpanAttributes/GenAiAttributes/UsageAttributes/CacheReadAttributes/NestedSpanAttributes/inputTokens``
 - ``Tracing/SpanAttributes/GenAiAttributes/UsageAttributes/NestedSpanAttributes/inputTokens``
 - ``Tracing/SpanAttributes/GenAiAttributes/UsageAttributes/NestedSpanAttributes/outputTokens``
+- ``Tracing/SpanAttributes/GenAiAttributes/UsageAttributes/ReasoningAttributes/NestedSpanAttributes/outputTokens``
+- ``Tracing/SpanAttributes/GenAiAttributes/WorkflowAttributes/NestedSpanAttributes/name``
 - ``OTelAttribute/genAi/agent/description``
 - ``OTelAttribute/genAi/agent/id``
 - ``OTelAttribute/genAi/agent/name``
@@ -4610,12 +4654,14 @@ This document defines attributes of a z/OS resource.
 - ``OTelAttribute/genAi/request/presencePenalty``
 - ``OTelAttribute/genAi/request/seed``
 - ``OTelAttribute/genAi/request/stopSequences``
+- ``OTelAttribute/genAi/request/stream``
 - ``OTelAttribute/genAi/request/temperature``
 - ``OTelAttribute/genAi/request/topK``
 - ``OTelAttribute/genAi/request/topP``
 - ``OTelAttribute/genAi/response/finishReasons``
 - ``OTelAttribute/genAi/response/id``
 - ``OTelAttribute/genAi/response/model``
+- ``OTelAttribute/genAi/response/timeToFirstChunk``
 - ``OTelAttribute/genAi/retrieval/documents``
 - ``OTelAttribute/genAi/retrieval/query/text``
 - ``OTelAttribute/genAi/systemInstructions``
@@ -4631,6 +4677,8 @@ This document defines attributes of a z/OS resource.
 - ``OTelAttribute/genAi/usage/cacheRead/inputTokens``
 - ``OTelAttribute/genAi/usage/inputTokens``
 - ``OTelAttribute/genAi/usage/outputTokens``
+- ``OTelAttribute/genAi/usage/reasoning/outputTokens``
+- ``OTelAttribute/genAi/workflow/name``
 
 ### Deprecated GenAI Attributes
 
@@ -4677,7 +4725,13 @@ This document defines attributes of a z/OS resource.
 
 ### Go Attributes
 
+- ``Tracing/SpanAttributes/GoAttributes/CpuAttributes/NestedSpanAttributes/detailedState``
+- ``Tracing/SpanAttributes/GoAttributes/CpuAttributes/NestedSpanAttributes/state``
+- ``Tracing/SpanAttributes/GoAttributes/MemoryAttributes/NestedSpanAttributes/detailedType``
 - ``Tracing/SpanAttributes/GoAttributes/MemoryAttributes/NestedSpanAttributes/type``
+- ``OTelAttribute/go/cpu/detailedState``
+- ``OTelAttribute/go/cpu/state``
+- ``OTelAttribute/go/memory/detailedType``
 - ``OTelAttribute/go/memory/type``
 
 ### GraphQL Attributes
@@ -4904,7 +4958,19 @@ This document defines attributes of a z/OS resource.
 - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/ConditionAttributes/NestedSpanAttributes/type``
 - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/label``
 - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/NestedSpanAttributes/name``
+- ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/SystemContainerAttributes/NestedSpanAttributes/name``
 - ``Tracing/SpanAttributes/K8sAttributes/NodeAttributes/NestedSpanAttributes/uid``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/annotation``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/label``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/NestedSpanAttributes/name``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/NestedSpanAttributes/reclaimPolicy``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/StatusAttributes/NestedSpanAttributes/phase``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeAttributes/NestedSpanAttributes/uid``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/annotation``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/label``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/NestedSpanAttributes/name``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/StatusAttributes/NestedSpanAttributes/phase``
+- ``Tracing/SpanAttributes/K8sAttributes/PersistentvolumeclaimAttributes/NestedSpanAttributes/uid``
 - ``Tracing/SpanAttributes/K8sAttributes/PodAttributes/annotation``
 - ``Tracing/SpanAttributes/K8sAttributes/PodAttributes/NestedSpanAttributes/hostname``
 - ``Tracing/SpanAttributes/K8sAttributes/PodAttributes/NestedSpanAttributes/ip``
@@ -4980,7 +5046,19 @@ This document defines attributes of a z/OS resource.
 - ``OTelAttribute/k8s/node/condition/type``
 - ``OTelAttribute/k8s/node/label``
 - ``OTelAttribute/k8s/node/name``
+- ``OTelAttribute/k8s/node/systemContainer/name``
 - ``OTelAttribute/k8s/node/uid``
+- ``OTelAttribute/k8s/persistentvolume/annotation``
+- ``OTelAttribute/k8s/persistentvolume/label``
+- ``OTelAttribute/k8s/persistentvolume/name``
+- ``OTelAttribute/k8s/persistentvolume/reclaimPolicy``
+- ``OTelAttribute/k8s/persistentvolume/status/phase``
+- ``OTelAttribute/k8s/persistentvolume/uid``
+- ``OTelAttribute/k8s/persistentvolumeclaim/annotation``
+- ``OTelAttribute/k8s/persistentvolumeclaim/label``
+- ``OTelAttribute/k8s/persistentvolumeclaim/name``
+- ``OTelAttribute/k8s/persistentvolumeclaim/status/phase``
+- ``OTelAttribute/k8s/persistentvolumeclaim/uid``
 - ``OTelAttribute/k8s/pod/annotation``
 - ``OTelAttribute/k8s/pod/hostname``
 - ``OTelAttribute/k8s/pod/ip``
@@ -5632,8 +5710,10 @@ This document defines attributes of a z/OS resource.
 
 ### System Memory Attributes
 
+- ``Tracing/SpanAttributes/SystemAttributes/MemoryAttributes/LinuxAttributes/HugepagesAttributes/NestedSpanAttributes/state``
 - ``Tracing/SpanAttributes/SystemAttributes/MemoryAttributes/LinuxAttributes/SlabAttributes/NestedSpanAttributes/state``
 - ``Tracing/SpanAttributes/SystemAttributes/MemoryAttributes/NestedSpanAttributes/state``
+- ``OTelAttribute/system/memory/linux/hugepages/state``
 - ``OTelAttribute/system/memory/linux/slab/state``
 - ``OTelAttribute/system/memory/state``
 

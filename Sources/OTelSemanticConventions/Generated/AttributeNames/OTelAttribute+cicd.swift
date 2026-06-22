@@ -36,7 +36,7 @@ extension OTelAttribute {
             /// - Type: enum
             ///     - `success`: The pipeline run finished successfully.
             ///     - `failure`: The pipeline run did not finish successfully, eg. due to a compile error or a failing test. Such failures are usually detected by non-zero exit codes of the tools executed in the pipeline run.
-            ///     - `error`: The pipeline run failed due to an error in the CICD system, eg. due to the worker being killed.
+            ///     - `error`: The pipeline run failed due to an error in the CI/CD system, eg. due to the worker being killed.
             ///     - `timeout`: A timeout caused the pipeline run to be interrupted.
             ///     - `cancellation`: The pipeline run was cancelled, eg. by a user manually cancelling the pipeline run.
             ///     - `skip`: The pipeline run was skipped, eg. due to a precondition not being met.
@@ -139,7 +139,7 @@ extension OTelAttribute {
                     /// - Type: enum
                     ///     - `success`: The task run finished successfully.
                     ///     - `failure`: The task run did not finish successfully, eg. due to a compile error or a failing test. Such failures are usually detected by non-zero exit codes of the tools executed in the task run.
-                    ///     - `error`: The task run failed due to an error in the CICD system, eg. due to the worker being killed.
+                    ///     - `error`: The task run failed due to an error in the CI/CD system, eg. due to the worker being killed.
                     ///     - `timeout`: A timeout caused the task run to be interrupted.
                     ///     - `cancellation`: The task run was cancelled, eg. by a user manually cancelling the task run.
                     ///     - `skip`: The task run was skipped, eg. due to a precondition not being met.
@@ -165,7 +165,7 @@ extension OTelAttribute {
 
         /// `cicd.system` namespace
         public enum system {
-            /// `cicd.system.component` **UNSTABLE**: The name of a component of the CICD system.
+            /// `cicd.system.component` **UNSTABLE**: The name of a component of the CI/CD system.
             ///
             /// - Stability: development
             /// - Type: string
@@ -178,7 +178,7 @@ extension OTelAttribute {
 
         /// `cicd.worker` namespace
         public enum worker {
-            /// `cicd.worker.id` **UNSTABLE**: The unique identifier of a worker within a CICD system.
+            /// `cicd.worker.id` **UNSTABLE**: The unique identifier of a worker within a CI/CD system.
             ///
             /// - Stability: development
             /// - Type: string
@@ -188,7 +188,7 @@ extension OTelAttribute {
             ///     - `controller`
             public static let id = "cicd.worker.id"
 
-            /// `cicd.worker.name` **UNSTABLE**: The name of a worker within a CICD system.
+            /// `cicd.worker.name` **UNSTABLE**: The name of a worker within a CI/CD system.
             ///
             /// - Stability: development
             /// - Type: string
@@ -198,13 +198,13 @@ extension OTelAttribute {
             ///     - `Ubuntu LTS`
             public static let name = "cicd.worker.name"
 
-            /// `cicd.worker.state` **UNSTABLE**: The state of a CICD worker / agent.
+            /// `cicd.worker.state` **UNSTABLE**: The state of a CI/CD worker / agent.
             ///
             /// - Stability: development
             /// - Type: enum
-            ///     - `available`: The worker is not performing work for the CICD system. It is available to the CICD system to perform work on (online / idle).
-            ///     - `busy`: The worker is performing work for the CICD system.
-            ///     - `offline`: The worker is not available to the CICD system (disconnected / down).
+            ///     - `available`: The worker is not performing work for the CI/CD system. It is available to the CI/CD system to perform work on (online / idle).
+            ///     - `busy`: The worker is performing work for the CI/CD system.
+            ///     - `offline`: The worker is not available to the CI/CD system (disconnected / down).
             /// - Examples:
             ///     - `idle`
             ///     - `busy`

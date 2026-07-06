@@ -416,6 +416,23 @@ This document defines attributes for AWS Step Functions.
     }
 }
 
+## General Azure Attributes
+
+This section defines generic attributes for Azure services.
+
+@TabNavigator {
+    @Tab("Span Attributes") {
+        @Links(visualStyle: list) {
+            - ``Tracing/SpanAttributes/AzureAttributes/ResourceGroupAttributes/NestedSpanAttributes/name``
+        }
+    }
+    @Tab("String Constants") {
+        @Links(visualStyle: list) {
+            - ``OTelAttribute/azure/resourceGroup/name``
+        }
+    }
+}
+
 ## Azure Client Library Attributes
 
 This section defines generic attributes used by Azure Client Libraries.
@@ -4001,6 +4018,11 @@ This document defines attributes of a z/OS resource.
 - ``Tracing/SpanAttributes/AwsAttributes/StepFunctionsAttributes/StateMachineAttributes/NestedSpanAttributes/arn``
 - ``OTelAttribute/aws/stepFunctions/activity/arn``
 - ``OTelAttribute/aws/stepFunctions/stateMachine/arn``
+
+### General Azure Attributes
+
+- ``Tracing/SpanAttributes/AzureAttributes/ResourceGroupAttributes/NestedSpanAttributes/name``
+- ``OTelAttribute/azure/resourceGroup/name``
 
 ### Azure Client Library Attributes
 
